@@ -1,6 +1,7 @@
 import pycom
 import time
 import colorconvert as ccv
+import random as rndm
 
 def changeBrightness(r, g, b, brightness):
     hls = list(ccv.convert_rgb_to_hls(r, g, b)) # Convert to HLS
@@ -26,10 +27,24 @@ def breathe(r, g, b):
             if (i <= 0):
                 countdown = False
 
-
+def party():
+    while True:
+        pycom.rgbled(changeColor(255, 0, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 255, 255))
+        time.sleep(1)
+        pycom.rgbled(changeColor(255, 255, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 255, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(255, 0, 255))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 0, 255))
+        time.sleep(1)
 
 pycom.heartbeat(False)
-
+party()
 breathe(255, 50, 10)
+
 #time.sleep(1)
 

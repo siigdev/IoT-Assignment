@@ -59,11 +59,15 @@ def convert_hls_to_rgb(h, l, s):
 def rgb_to_hex(red, green, blue):
     return '0x'+'%02x%02x%02x' % (red, green, blue)
 
+def changeBrightness(r, g, b, brightness):
+    hls = list(convert_rgb_to_hls(r, g, b))
+    hls[1] = brightness
+    rgb = convert_hls_to_rgb(hls[0], hls[1], hls[2])
+    return int(rgb_to_hex(rgb[0], rgb[1], rgb[2]))
+
+
 pycom.heartbeat(False)
-for cycles in range(10): # stop after 10 cycles
-    pycom.rgbled(int(rgb_to_hex(0, 255, 0),0)) # green
-    time.sleep(5)
-    pycom.rgbled(0x7f7f00) # yellow
-    time.sleep(1.5)
-    pycom.rgbled(0x7f0000) # red
-    time.sleep(4)
+
+for i in range(100): # stop after 10 cycles
+    pycom.rgbled(changeBrightness(10, 50, 10, (100-i)))
+    time.sleep(0.1)

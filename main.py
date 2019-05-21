@@ -5,6 +5,16 @@ from brightness import Brightness
 
 color = 0, 255, 0
 
+def changeBrightness(r, g, b, brightness):
+    hls = list(ccv.convert_rgb_to_hls(r, g, b))  # Convert to HLS
+    hls[1] = brightness  # Set the brightness
+    rgb = ccv.convert_hls_to_rgb(hls[0], hls[1], hls[2])  # Convert back to rgb
+    # Convert to hex and return
+    return int(ccv.rgb_to_hex(rgb[0], rgb[1], rgb[2]))
+
+def changeColor(r, g, b):
+    return int(ccv.rgb_to_hex(r, g, b))
+
 def senseBrightness():
     return Brightness().light()[0]
 
@@ -18,15 +28,11 @@ def automaticBrightness():
         else:
             pycom.rgbled(changeBrightness(255, 0, 0, 100-brightvalue))
 
-def changeBrightness(r, g, b, brightness):
-    hls = list(ccv.convert_rgb_to_hls(r, g, b))  # Convert to HLS
-    hls[1] = brightness  # Set the brightness
-    rgb = ccv.convert_hls_to_rgb(hls[0], hls[1], hls[2])  # Convert back to rgb
-    # Convert to hex and return
-    return int(ccv.rgb_to_hex(rgb[0], rgb[1], rgb[2]))
-
-def changeColor(r, g, b):
-    return int(ccv.rgb_to_hex(r, g, b))
+def eventTimer(timer, event):
+    while timer:
+        time.sleep(1)
+        timer -= 1
+    print(event)
 
 def breathe(r, g, b):
     i = 0
@@ -57,6 +63,5 @@ def party():
         time.sleep(1)
         pycom.rgbled(changeColor(0, 0, 255))
         time.sleep(1)
-
 
 pycom.heartbeat(False)

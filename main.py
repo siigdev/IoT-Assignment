@@ -1,7 +1,22 @@
 import pycom
 import time
 import colorconvert as ccv
+from brightness import Brightness
 
+color = 0, 255, 0
+
+def senseBrightness():
+    return Brightness().light()[0]
+
+def automaticBrightness():
+    while True:
+        lux = senseBrightness()
+        time.sleep(1)
+        if lux > 50:
+            print("in here")
+            pycom.rgbled(changeBrightness(255, 0, 0, 0))
+
+automaticBrightness()
 
 def changeBrightness(r, g, b, brightness):
     hls = list(ccv.convert_rgb_to_hls(r, g, b)) # Convert to HLS
@@ -43,7 +58,4 @@ def party():
         time.sleep(1)
 
 pycom.heartbeat(False)
-breathe(0, 50, 10)
-
-#time.sleep(1)
 

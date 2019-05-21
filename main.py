@@ -12,9 +12,13 @@ def automaticBrightness():
     while True:
         lux = senseBrightness()
         time.sleep(1)
-        if lux > 50:
-            print("in here")
+        brightvalue = lux/10
+        print(brightvalue)
+        if lux > 1000:
             pycom.rgbled(changeBrightness(255, 0, 0, 0))
+        else:
+            pycom.rgbled(changeBrightness(255, 0, 0, 100-brightvalue))
+        
 
 automaticBrightness()
 

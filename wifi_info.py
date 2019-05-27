@@ -1,0 +1,2 @@
+SSID = 'Dukaiknoget'
+KEY = 'notapassokay'

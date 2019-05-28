@@ -1,10 +1,56 @@
+
+
 window.addEventListener("load", function () {
+    // ###############################
+    // # MQTT CONNECTION             #
+    // ###############################
     
+    client = new Paho.MQTT.Client("m24.cloudmqtt.com", 31674, "hrngsnyc");
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+    var options = {
+        useSSL: true,
+        userName: "hrngsnyc",
+        password: "GQu0KtfN3TYp",
+        onSuccess: onConnect,
+        onFailure: doFail
+    }
+    client.connect(options);
+
+    function onConnect() {
+        console.log("onConnect");
+        client.subscribe("/cloudmqtt");
+        message = new Paho.MQTT.Message("Hello CloudMQTT");
+        message.destinationName = "/cloudmqtt";
+        client.send(message);
+    }
+    function doFail(e) {
+        console.log(e);
+    }
+    function onConnectionLost(responseObject) {
+        if (responseObject.errorCode !== 0) {
+            console.log("onConnectionLost:" + responseObject.errorMessage);
+        }
+    }
+    function onMessageArrived(message) {
+        console.log("onMessageArrived:" + message.payloadString);
+    }
+
+
+
+    // ###############################
+    // # DOM MANIPULATION            #
+    // ###############################
+
     // Handle the Brightness Slider
     var brightnessSlider = document.getElementById("brightnessSlider");
     var level = document.getElementById("level")
     brightnessSlider.oninput = function () {
         level.textContent = this.value;
+        var msg = ("brightness:" + this.value);
+        message = new Paho.MQTT.Message(msg);
+        message.destinationName = "/cloudmqtt";
+        client.send(message);
     }
 
     // Handle the Modes radio buttons
@@ -12,14 +58,15 @@ window.addEventListener("load", function () {
     var breathe = document.getElementById("breathe")
     var party = document.getElementById("party")
     var automatic = document.getElementById("automatic")
-    for(mode in modes) {
-        modes[mode].onclick = function() {
-            if (this.value == "automatic"){
+    for (mode in modes) {
+        modes[mode].onclick = function () {
+            if (this.value == "automatic") {
                 brightnessSlider.disabled = true
-                level.textContent = "Automatic "
+                level.textContent = "Automatic"
             }
             else {
                 brightnessSlider.disabled = false
+                level.textContent = brightnessSlider.value
             }
         }
     }
@@ -40,8 +87,10 @@ window.addEventListener("load", function () {
 
 
     function onColorChange(color, changes) {
-        // print the color's new hex value to the developer console
-        console.log(color.rgb);
+        var msg = (color.rgbString);
+        message = new Paho.MQTT.Message(msg);
+        message.destinationName = "/cloudmqtt";
+        client.send(message);
     }
 
     // listen to a color picker's color:change event

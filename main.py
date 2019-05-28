@@ -17,20 +17,13 @@ color = 0, 255, 0
 wlan = WLAN(mode=WLAN.STA)
 wlan.antenna(WLAN.INT_ANT)
 wlan.connect(SSID, auth=(WLAN.WPA2, KEY), timeout=5000)
-#while not wlan.isconnected(): machine.idle()
+while not wlan.isconnected(): machine.idle()
 
 client = MQTTClient(USER, SERVER, PORT, user=USER, password=PASSWORD)
 def settimeout(duration): pass
 client.settimeout = settimeout
 client.connect()
 client.subscribe('/lighting')
-
-def init_socket():
-    sigfox = Sigfox(mode=Sigfox.SIGFOX, rcz=Sigfox.RCZ1)
-    s = socket.socket(socket.AF_SIGFOX, socket.SOCK_RAW)
-    s.setblocking(True)
-    s.setsockopt(socket.SOL_SIGFOX, socket.SO_RX, False)
-    return s
 
 def changeBrightness(r, g, b, brightness):
     hls = list(ccv.convert_rgb_to_hls(r, g, b))  # Convert to HLS
@@ -92,4 +85,3 @@ def party():
         time.sleep(1)
 
 pycom.heartbeat(False)
-socket = init_socket()

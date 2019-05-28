@@ -17,24 +17,26 @@
 
     <script src="data/iro.js"></script>
     <script src="data/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
 </head>
 
 <body>
     <div class="flexcontainer">
         <div id="color-picker-container"><h4>Color</h1></div>
         <div id="brightness"><h4>Brightness</h1>
+            
             <input type="range" orient="vertical" min="0" max="100" value="50" class="slider" id="brightnessSlider">
             <p>Value: <span id="level">50</span></p>
+            
         </div>
         <div id="modes">
             <h4>Modes</h4>
-            <form action="">
-                <input type="radio" name="gender" value="male"> Breathe <br>
-                <input type="radio" name="gender" value="female"> Party <br>
-                <input type="radio" name="gender" value="other"> Other
+            <form action="" id="modes">
+                <input type="radio" name="mode" value="breathe" id="breathe"> Breathe <br>
+                <input type="radio" name="mode" value="party" id="party"> Party <br>
+                <input type="radio" name="mode" value="automatic" id="automatic"> Automatic Brightness
             </form>
         </div>
     </div>
 </body>
-
 </html>

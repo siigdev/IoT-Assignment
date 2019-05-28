@@ -11,6 +11,9 @@ h4 {
 #color-picker-container{
     width: 200px;
 }
+#brightness {
+    width: 110px;
+}
 input[type=range][orient=vertical]
 {
     writing-mode: bt-lr; /* IE */

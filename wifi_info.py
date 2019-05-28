@@ -1,2 +1,2 @@
-SSID = 'Dukaiknoget'
-KEY = 'notapassokay'
+SSID = 'Dukansletikkenoget'
+KEY = 'asd123LAL'

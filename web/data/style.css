@@ -1,0 +1,21 @@
+.flexcontainer {
+    display: flex;
+    justify-content: center;
+}
+.flexcontainer > div {
+    margin: 20px;
+}
+h4 {
+    text-align: center;
+}
+#color-picker-container{
+    width: 200px;
+}
+input[type=range][orient=vertical]
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 175px;
+    padding: 0 5px;
+}

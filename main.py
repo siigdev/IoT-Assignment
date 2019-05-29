@@ -37,7 +37,6 @@ def stringbuildRgb(rgb):
     splitted = x.split(", ")
     return splitted[0], splitted[1], splitted[2]
 
-client = MQTTClient('UNIQUENAME', SERVER, PORT, user=USER, password=PASSWORD)
 
 client = MQTTClient(CLIENT, SERVER, PORT, user=USER, password=PASSWORD)
 def settimeout(duration): pass

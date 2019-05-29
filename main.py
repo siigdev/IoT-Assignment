@@ -10,9 +10,6 @@ from wifi_info import SSID, KEY
 from umqtt import MQTTClient
 from mqtt_info import SERVER, USER, PASSWORD, PORT, CLIENT, CLIENTPASS
 
-lightmode = 'autobright'
-color = 0, 255, 0
-
 wlan = WLAN(mode=WLAN.STA)
 nets = wlan.scan()
 print(nets)
@@ -21,29 +18,37 @@ for net in nets:
         print('Network found!')
         wlan.connect(net.ssid, auth=(net.sec, KEY), timeout=5000)
         while not wlan.isconnected():
-            machine.idle() # save power while waiting
+            machine.idle()  # save power while waiting
         print('WLAN connection succeeded!')
         break
 
-
 def sub_led(topic, msg):
-    if (msg == b'breathe'):
-        breathe(0, 155, 124)
-    elif (msg == b'party'):
+    mode = str(msg).split(':')[1]
+    r, g, b = stringbuildRgb(str(msg).split(':')[0])
+    if (mode == "breathe'"):
+        breathe(r, g, b)
+    elif (mode == "party'"):
         party()
-    elif (msg == b'automatic'):
-        automaticBrightness()
+    elif (mode == 'automatic'):
+        automaticBrightness(0, 155, 124)
 
+def stringbuildRgb(rgb):
+    x = rgb[rgb.find('(')+1: rgb.find(')')]
+    splitted = x.split(", ")
+    return splitted[0], splitted[1], splitted[2]
+
+client = MQTTClient('UNIQUENAME', SERVER, PORT, user=USER, password=PASSWORD)
 
 client = MQTTClient(CLIENT, SERVER, PORT, user=USER, password=PASSWORD)
 def settimeout(duration): pass
+
 client.settimeout = settimeout
 client.set_callback(sub_led)
 client.connect()
 client.subscribe(b'/led')
 
 def changeBrightness(r, g, b, brightness):
-    hls = list(ccv.convert_rgb_to_hls(r, g, b))  # Convert to HLS
+    hls = list(ccv.convert_rgb_to_hls(int(r), int(g), int(b)))  # Convert to HLS
     hls[1] = brightness  # Set the brightness
     rgb = ccv.convert_hls_to_rgb(hls[0], hls[1], hls[2])  # Convert back to rgb
     # Convert to hex and return
@@ -55,14 +60,14 @@ def changeColor(r, g, b):
 def senseBrightness():
     return Brightness().light()[0]
 
-def automaticBrightness():
+def automaticBrightness(r, g, b):
     lux = senseBrightness()
     time.sleep(1)
     brightvalue = lux/10
     if lux > 1000:
-        pycom.rgbled(changeBrightness(255, 0, 0, 0))
+        pycom.rgbled(changeBrightness(r, g, b, 0))
     else:
-        pycom.rgbled(changeBrightness(255, 0, 0, 100-brightvalue))
+        pycom.rgbled(changeBrightness(r, g, b, 100-brightvalue))
 
 def eventTimer(timer, event):
     while timer:
@@ -85,22 +90,20 @@ def breathe(r, g, b):
             countdown = False
 
 def party():
-    pycom.rgbled(changeColor(255, 0, 0))
-    time.sleep(1)
-    pycom.rgbled(changeColor(0, 255, 255))
-    time.sleep(1)
-    pycom.rgbled(changeColor(255, 255, 0))
-    time.sleep(1)
-    pycom.rgbled(changeColor(0, 255, 0))
-    time.sleep(1)
-    pycom.rgbled(changeColor(255, 0, 255))
-    time.sleep(1)
-    pycom.rgbled(changeColor(0, 0, 255))
-    time.sleep(1)
+    while True:
+        pycom.rgbled(changeColor(255, 0, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 255, 255))
+        time.sleep(1)
+        pycom.rgbled(changeColor(255, 255, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 255, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(255, 0, 255))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 0, 255))
+        time.sleep(1)
 
 pycom.heartbeat(False)
-
 while True:
     client.check_msg()
-
-

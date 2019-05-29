@@ -43,7 +43,7 @@ def stringbuildRgb(rgb):
     splitted = x.split(", ")
     return splitted[0], splitted[1], splitted[2]
 
-client = MQTTClient('UNIQUENAME', SERVER, PORT, user=USER, password=PASSWORD)
+client = MQTTClient('santa', SERVER, PORT, user=USER, password=PASSWORD)
 
 def settimeout(duration): pass
 
@@ -70,11 +70,13 @@ def senseBrightness():
 def automaticBrightness(r, g, b):
     lux = senseBrightness()
     time.sleep(1)
-    brightvalue = lux/10
-    if lux > 1000:
-        pycom.rgbled(changeBrightness(r, g, b, 0))
-    else:
-        pycom.rgbled(changeBrightness(r, g, b, 100-brightvalue))
+    while True:
+        brightvalue = lux/10
+        if lux > 1000:
+            pycom.rgbled(changeBrightness(r, g, b, 0))
+        else:
+            pycom.rgbled(changeBrightness(r, g, b, 100-brightvalue))
+        client.check_msg()
 
 def eventTimer(timer, event):
     while timer:
@@ -86,6 +88,7 @@ def heartbeating(r, g, b):
     while True:
         pycom.rgbled(changeColor(r, g, b))
         time.sleep(0.03)
+        client.check_msg()
 
 def breathe(r, g, b):
     i = 0
@@ -101,9 +104,9 @@ def breathe(r, g, b):
             i -= 1
             if (i <= 0):
                 countdown = False
+        client.check_msg()
 
 def party():
-    breatheval = False
     while True:
         pycom.rgbled(changeColor(255, 0, 0))
         time.sleep(1)
@@ -117,6 +120,7 @@ def party():
         time.sleep(1)
         pycom.rgbled(changeColor(0, 0, 255))
         time.sleep(1)
+        client.check_msg()
 
 pycom.heartbeat(False)
 while True:

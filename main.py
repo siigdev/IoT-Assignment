@@ -23,14 +23,18 @@ for net in nets:
         break
 
 def sub_led(topic, msg):
-    mode = str(msg).split(':')[1]
-    r, g, b = stringbuildRgb(str(msg).split(':')[0])
-    if (mode == "breathe'"):
+    msg = str(msg).replace("'","")
+    mode = msg.split(':')[1]
+    r, g, b = stringbuildRgb(msg.split(':')[0])
+    if (mode == "breathe"):
         breathe(r, g, b)
-    elif (mode == "party'"):
+    elif (mode == "party"):
         party()
-    elif (mode == 'automatic'):
-        automaticBrightness(0, 155, 124)
+    elif (mode == "automatic"):
+        automaticBrightness(r, g, b)
+    elif (mode == "brightness"):
+        bright = msg.split(':')[2]
+        changeBrightness(r, g, b, bright)
 
 def stringbuildRgb(rgb):
     x = rgb[rgb.find('(')+1: rgb.find(')')]
@@ -47,11 +51,13 @@ client.connect()
 client.subscribe(b'/led')
 
 def changeBrightness(r, g, b, brightness):
-    hls = list(ccv.convert_rgb_to_hls(int(r), int(g), int(b)))  # Convert to HLS
+    r, g, b = int(r), int(g), int(b)
+    brightness = int(brightness)
+    hls = list(ccv.convert_rgb_to_hls(r, g, b))  # Convert to HLS
     hls[1] = brightness  # Set the brightness
     rgb = ccv.convert_hls_to_rgb(hls[0], hls[1], hls[2])  # Convert back to rgb
     # Convert to hex and return
-    return int(ccv.rgb_to_hex(rgb[0], rgb[1], rgb[2]))
+    pycom.rgbled(int(ccv.rgb_to_hex(rgb[0], rgb[1], rgb[2])))
 
 def changeColor(r, g, b):
     return int(ccv.rgb_to_hex(r, g, b))
@@ -77,16 +83,17 @@ def eventTimer(timer, event):
 def breathe(r, g, b):
     i = 0
     countdown = False
-    pycom.rgbled(changeBrightness(r, g, b, i))
-    time.sleep(0.03)
-    if countdown == False:
-        i += 1
-        if (i >= 60):
-            countdown = True
-    if countdown == True:
-        i -= 1
-        if (i <= 0):
-            countdown = False
+    while True:
+        pycom.rgbled(changeBrightness(r, g, b, i))
+        time.sleep(0.03)
+        if countdown == False:
+            i += 1
+            if (i >= 60):
+                countdown = True
+        if countdown == True:
+            i -= 1
+            if (i <= 0):
+                countdown = False
 
 def party():
     while True:

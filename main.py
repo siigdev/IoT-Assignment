@@ -23,12 +23,19 @@ for net in nets:
         break
 
 def sub_led(topic, msg):
-    if (msg == b'breathe'):
-        breathe(0, 155, 124)
-    elif (msg == b'party'):
+    mode = str(msg).split(':')[1]
+    r, g, b = stringbuildRgb(str(msg).split(':')[0])
+    if (mode == "breathe'"):
+        breathe(r, g, b)
+    elif (mode == "party'"):
         party()
-    elif (msg == b'automatic'):
-        automaticBrightness()
+    elif (mode == 'automatic'):
+        automaticBrightness(0, 155, 124)
+
+def stringbuildRgb(rgb):
+    x = rgb[rgb.find('(')+1: rgb.find(')')]
+    splitted = x.split(", ")
+    return splitted[0], splitted[1], splitted[2]
 
 client = MQTTClient('UNIQUENAME', SERVER, PORT, user=USER, password=PASSWORD)
 
@@ -40,7 +47,7 @@ client.connect()
 client.subscribe(b'/led')
 
 def changeBrightness(r, g, b, brightness):
-    hls = list(ccv.convert_rgb_to_hls(r, g, b))  # Convert to HLS
+    hls = list(ccv.convert_rgb_to_hls(int(r), int(g), int(b)))  # Convert to HLS
     hls[1] = brightness  # Set the brightness
     rgb = ccv.convert_hls_to_rgb(hls[0], hls[1], hls[2])  # Convert back to rgb
     # Convert to hex and return

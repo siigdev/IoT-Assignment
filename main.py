@@ -35,7 +35,7 @@ def sub_led(topic, msg):
         automaticBrightness()
 
 
-client = MQTTClient(USER, SERVER, PORT, user=USER, password=PASSWORD)
+client = MQTTClient('UNIQUENAME', SERVER, PORT, user=USER, password=PASSWORD)
 def settimeout(duration): pass
 client.settimeout = settimeout
 client.set_callback(sub_led)
@@ -64,6 +64,8 @@ def automaticBrightness():
     else:
         pycom.rgbled(changeBrightness(255, 0, 0, 100-brightvalue))
 
+def heartbeating():
+
 def eventTimer(timer, event):
     while timer:
         time.sleep(1)
@@ -85,18 +87,19 @@ def breathe(r, g, b):
             countdown = False
 
 def party():
-    pycom.rgbled(changeColor(255, 0, 0))
-    time.sleep(1)
-    pycom.rgbled(changeColor(0, 255, 255))
-    time.sleep(1)
-    pycom.rgbled(changeColor(255, 255, 0))
-    time.sleep(1)
-    pycom.rgbled(changeColor(0, 255, 0))
-    time.sleep(1)
-    pycom.rgbled(changeColor(255, 0, 255))
-    time.sleep(1)
-    pycom.rgbled(changeColor(0, 0, 255))
-    time.sleep(1)
+    while True:
+        pycom.rgbled(changeColor(255, 0, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 255, 255))
+        time.sleep(1)
+        pycom.rgbled(changeColor(255, 255, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 255, 0))
+        time.sleep(1)
+        pycom.rgbled(changeColor(255, 0, 255))
+        time.sleep(1)
+        pycom.rgbled(changeColor(0, 0, 255))
+        time.sleep(1)
 
 pycom.heartbeat(False)
 

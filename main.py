@@ -32,6 +32,8 @@ def sub_led(topic, msg):
         party()
     elif (mode == "automatic"):
         automaticBrightness(r, g, b)
+    elif (mode == "heartbeat"):
+        heartbeating(r, g, b)
     elif (mode == "brightness"):
         bright = msg.split(':')[2]
         pycom.rgbled(changeBrightness(r, g, b, bright))
@@ -79,6 +81,11 @@ def eventTimer(timer, event):
         time.sleep(1)
         timer -= 1
     print(event)
+
+def heartbeating(r, g, b):
+    while True:
+        pycom.rgbled(changeColor(r, g, b))
+        time.sleep(0.03)
 
 def breathe(r, g, b):
     i = 0

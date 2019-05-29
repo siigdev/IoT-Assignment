@@ -55,8 +55,10 @@ window.addEventListener("load", function () {
 
     // Handle the Modes radio buttons
     var modes = document.getElementsByName("mode")
+    var none = document.getElementById("none")
     var breathe = document.getElementById("breathe")
     var party = document.getElementById("party")
+    var party = document.getElementById("heartbeat")
     var automatic = document.getElementById("automatic")
     for (mode in modes) {
         modes[mode].onclick = function () {
@@ -71,9 +73,6 @@ window.addEventListener("load", function () {
         }
     }
 
-
-
-
     var colorPicker = new iro.ColorPicker('#color-picker-container', {
         layout: [
             {
@@ -84,7 +83,6 @@ window.addEventListener("load", function () {
             }
         ]
     });
-
 
     function onColorChange(color, changes) {
         var msg = (color.rgbString);

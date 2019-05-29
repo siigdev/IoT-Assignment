@@ -8,7 +8,7 @@ from machine import Pin
 import socket
 from wifi_info import SSID, KEY
 from umqtt import MQTTClient
-from mqtt_info import SERVER, USER, PASSWORD, PORT
+from mqtt_info import SERVER, USER, PASSWORD, PORT, CLIENT, CLIENTPASS
 
 wlan = WLAN(mode=WLAN.STA)
 nets = wlan.scan()
@@ -41,8 +41,8 @@ def stringbuildRgb(rgb):
     splitted = x.split(", ")
     return splitted[0], splitted[1], splitted[2]
 
-client = MQTTClient('UNIQUENAME', SERVER, PORT, user=USER, password=PASSWORD)
 
+client = MQTTClient(CLIENT, SERVER, PORT, user=USER, password=PASSWORD)
 def settimeout(duration): pass
 
 client.settimeout = settimeout

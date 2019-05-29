@@ -8,7 +8,7 @@ from machine import Pin
 import socket
 from wifi_info import SSID, KEY
 from umqtt import MQTTClient
-from mqtt_info import SERVER, USER, PASSWORD, PORT, CLIENT, CLIENTPASS
+from mqtt_info import SERVER, USER, PASSWORD, PORT
 
 wlan = WLAN(mode=WLAN.STA)
 nets = wlan.scan()
@@ -34,15 +34,15 @@ def sub_led(topic, msg):
         automaticBrightness(r, g, b)
     elif (mode == "brightness"):
         bright = msg.split(':')[2]
-        changeBrightness(r, g, b, bright)
+        pycom.rgbled(changeBrightness(r, g, b, bright))
 
 def stringbuildRgb(rgb):
     x = rgb[rgb.find('(')+1: rgb.find(')')]
     splitted = x.split(", ")
     return splitted[0], splitted[1], splitted[2]
 
+client = MQTTClient('UNIQUENAME', SERVER, PORT, user=USER, password=PASSWORD)
 
-client = MQTTClient(CLIENT, SERVER, PORT, user=USER, password=PASSWORD)
 def settimeout(duration): pass
 
 client.settimeout = settimeout
@@ -57,7 +57,7 @@ def changeBrightness(r, g, b, brightness):
     hls[1] = brightness  # Set the brightness
     rgb = ccv.convert_hls_to_rgb(hls[0], hls[1], hls[2])  # Convert back to rgb
     # Convert to hex and return
-    pycom.rgbled(int(ccv.rgb_to_hex(rgb[0], rgb[1], rgb[2])))
+    return int(ccv.rgb_to_hex(rgb[0], rgb[1], rgb[2]))
 
 def changeColor(r, g, b):
     return int(ccv.rgb_to_hex(r, g, b))
@@ -96,6 +96,7 @@ def breathe(r, g, b):
                 countdown = False
 
 def party():
+    breatheval = False
     while True:
         pycom.rgbled(changeColor(255, 0, 0))
         time.sleep(1)

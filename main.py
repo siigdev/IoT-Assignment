@@ -10,9 +10,6 @@ from wifi_info import SSID, KEY
 from umqtt import MQTTClient
 from mqtt_info import SERVER, USER, PASSWORD, PORT
 
-lightmode = 'autobright'
-color = 0, 255, 0
-
 wlan = WLAN(mode=WLAN.STA)
 nets = wlan.scan()
 print(nets)
@@ -21,10 +18,9 @@ for net in nets:
         print('Network found!')
         wlan.connect(net.ssid, auth=(net.sec, KEY), timeout=5000)
         while not wlan.isconnected():
-            machine.idle() # save power while waiting
+            machine.idle()  # save power while waiting
         print('WLAN connection succeeded!')
         break
-
 
 def sub_led(topic, msg):
     if (msg == b'breathe'):
@@ -34,9 +30,10 @@ def sub_led(topic, msg):
     elif (msg == b'automatic'):
         automaticBrightness()
 
-
 client = MQTTClient('UNIQUENAME', SERVER, PORT, user=USER, password=PASSWORD)
+
 def settimeout(duration): pass
+
 client.settimeout = settimeout
 client.set_callback(sub_led)
 client.connect()
@@ -55,16 +52,14 @@ def changeColor(r, g, b):
 def senseBrightness():
     return Brightness().light()[0]
 
-def automaticBrightness():
+def automaticBrightness(r, g, b):
     lux = senseBrightness()
     time.sleep(1)
     brightvalue = lux/10
     if lux > 1000:
-        pycom.rgbled(changeBrightness(255, 0, 0, 0))
+        pycom.rgbled(changeBrightness(r, g, b, 0))
     else:
-        pycom.rgbled(changeBrightness(255, 0, 0, 100-brightvalue))
-
-def heartbeating():
+        pycom.rgbled(changeBrightness(r, g, b, 100-brightvalue))
 
 def eventTimer(timer, event):
     while timer:
@@ -102,8 +97,5 @@ def party():
         time.sleep(1)
 
 pycom.heartbeat(False)
-
 while True:
     client.check_msg()
-
-

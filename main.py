@@ -8,7 +8,7 @@ from machine import Pin
 import socket
 from wifi_info import SSID, KEY
 from umqtt import MQTTClient
-from mqtt_info import SERVER, USER, PASSWORD, PORT
+from mqtt_info import SERVER, USER, PASSWORD, PORT, CLIENT, CLIENTPASS
 
 lightmode = 'autobright'
 color = 0, 255, 0
@@ -35,7 +35,7 @@ def sub_led(topic, msg):
         automaticBrightness()
 
 
-client = MQTTClient(USER, SERVER, PORT, user=USER, password=PASSWORD)
+client = MQTTClient(CLIENT, SERVER, PORT, user=USER, password=PASSWORD)
 def settimeout(duration): pass
 client.settimeout = settimeout
 client.set_callback(sub_led)

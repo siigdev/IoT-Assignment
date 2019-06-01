@@ -1,2 +1,2 @@
-SSID = 'bf1698-2.4GHz'
-KEY = '283219894'
+SSID = 'Dukansletikkenoget'
+KEY = 'dss'

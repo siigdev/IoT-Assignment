@@ -11,7 +11,8 @@ This is an assignment in the topic Software Engineering of Internet of Things. T
 
 # How to run
 1. Update the network SSID settings in wifi_info.py
-2. Update the MQTT settings in mqtt_info.py
+2. Update the MQTT settings in mqtt_info.py (Remember unique client names)
 3. Push the Python code onto the devices using Pymakr or similar
-4. Host the Web application within the web folder
-5. Connect to localhost and the system is now ready
+4. Update the MQTT settings within web/data/main.js
+5. Host the Web application within the web folder
+6. Connect to localhost and the system is now ready

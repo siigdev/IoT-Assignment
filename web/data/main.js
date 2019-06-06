@@ -4,14 +4,14 @@ window.addEventListener("load", function () {
     // ###############################
     // # MQTT CONNECTION             #
     // ###############################
-    
+
     client = new Paho.MQTT.Client("m24.cloudmqtt.com", 31674, "hrngsnyc");
     client.onConnectionLost = onConnectionLost;
     client.onMessageArrived = onMessageArrived;
     var options = {
         useSSL: true,
         userName: "hrngsnyc",
-        password: "GQu0KtfN3TYp",
+        password: "xxxx",
         onSuccess: onConnect,
         onFailure: doFail
     }

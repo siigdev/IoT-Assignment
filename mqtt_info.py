@@ -1,6 +1,6 @@
 SERVER='m24.cloudmqtt.com'
-USER='hrngsnyc'
-PASSWORD='GQu0KtfN3TYp'
+USER='xxxx'
+PASSWORD='xxxx'
 CLIENT='jens'
 CLIENTPASS='a123456'
 PORT=11674

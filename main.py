@@ -23,7 +23,7 @@ for net in nets:
         break
 
 def sub_led(topic, msg):
-    msg = str(msg).replace("'","")
+    msg = str(msg).replace("'", "")
     mode = msg.split(':')[1]
     r, g, b = stringbuildRgb(msg.split(':')[0])
     if (mode == "breathe"):
@@ -44,9 +44,7 @@ def stringbuildRgb(rgb):
     return splitted[0], splitted[1], splitted[2]
 
 client = MQTTClient('santa', SERVER, PORT, user=USER, password=PASSWORD)
-
 def settimeout(duration): pass
-
 client.settimeout = settimeout
 client.set_callback(sub_led)
 client.connect()

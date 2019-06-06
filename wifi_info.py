@@ -1,2 +1,2 @@
 SSID = 'Dukansletikkenoget'
-KEY = 'dss'
+KEY = 'xxxx'
